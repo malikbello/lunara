@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Leaf } from 'lucide-react';
+import { MoonStar } from 'lucide-react'; // Changed from Leaf to MoonStar
 
 interface AppLogoProps {
   className?: string;
@@ -22,7 +22,7 @@ const AppLogo: React.FC<AppLogoProps> = ({ className, size = 'medium' }) => {
 
   return (
     <div className={`flex items-center font-headline font-bold text-primary ${sizeClasses[size]} ${className}`}>
-      <Leaf className={`mr-1 md:mr-2 ${iconSizeClasses[size]}`} />
+      <MoonStar className={`mr-1 md:mr-2 ${iconSizeClasses[size]}`} /> {/* Changed icon here */}
       Lunara
     </div>
   );

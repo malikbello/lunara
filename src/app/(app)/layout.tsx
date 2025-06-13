@@ -21,7 +21,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, MessageCircle, BarChart3, CalendarDays, Settings, LogOut, Info, Target, FileText, ShieldCheck, Leaf } from 'lucide-react';
+import { Home, MessageCircle, BarChart3, CalendarDays, Settings, LogOut, Info, Target, FileText, ShieldCheck, MoonStar } from 'lucide-react'; // Added MoonStar for consistency
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
@@ -65,7 +65,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarHeader className="p-4 items-center">
           <AppLogo className="text-sidebar-foreground group-data-[collapsible=icon]:hidden" />
           <div className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:justify-center w-full hidden">
-             <Leaf className="h-6 w-6 text-sidebar-foreground" />
+             <MoonStar className="h-6 w-6 text-sidebar-foreground" /> {/* Changed from Leaf */}
           </div>
         </SidebarHeader>
         <SidebarContent>

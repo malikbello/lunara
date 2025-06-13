@@ -9,100 +9,102 @@ body {
 
 @layer base {
   :root {
-    --background: 45 50% 96%; /* Light Beige */
-    --foreground: 90 25% 25%; /* Dark Muted Green-Brown */
+    /* Light Theme: Creamy, Wine Accents */
+    --background: 35 40% 96%; /* Warm Cream */
+    --foreground: 330 30% 25%; /* Dark Wine/Plum text */
 
-    --card: 40 40% 94%; /* Slightly darker Beige for card */
-    --card-foreground: 90 25% 25%; /* Dark Muted Green-Brown for card text */
+    --card: 35 30% 94%; /* Slightly off-cream */
+    --card-foreground: 330 30% 25%;
 
-    --popover: 45 50% 98%; /* Light beige for popover */
-    --popover-foreground: 90 25% 20%; /* Darker green for popover text */
+    --popover: 35 40% 97%; /* Light warm cream for popover */
+    --popover-foreground: 330 30% 20%;
 
-    --primary: 100 35% 60%; /* Calming Green */
-    --primary-foreground: 100 20% 95%; /* Light text for primary green */
+    --primary: 330 55% 50%; /* Rich Wine */
+    --primary-foreground: 330 30% 95%; /* Very Light Pink/Cream */
 
-    --secondary: 95 30% 75%; /* Lighter Green variant for secondary elements */
-    --secondary-foreground: 90 25% 20%; /* Darker text for secondary */
+    --secondary: 330 40% 70%; /* Lighter Muted Wine/Rose */
+    --secondary-foreground: 330 30% 20%;
 
-    --muted: 50 30% 90%; /* Muted Beige */
-    --muted-foreground: 90 20% 50%; /* Muted green-brown text */
+    --muted: 35 25% 90%; /* Muted Cream */
+    --muted-foreground: 330 20% 50%; /* Muted wine/plum text */
 
-    --accent: 30 60% 80%; /* Soft Peach/Terracotta for accent */
-    --accent-foreground: 30 30% 25%; /* Darker text for accent */
+    --accent: 20 65% 65%; /* Warm Peach/Soft Coral */
+    --accent-foreground: 20 25% 20%; /* Darker text for accent */
 
-    --destructive: 0 70% 60%; /* Adjusted for visibility, keeping a warm tone */
+    --destructive: 0 60% 55%; /* Slightly desaturated Red */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 90 20% 85%; /* Green-tinged border */
-    --input: 50 30% 92%; /* Beige-tinged input background */
-    --ring: 100 40% 70%; /* Green-based ring */
+    --border: 330 20% 85%; /* Light Wine-tinted Border */
+    --input: 35 30% 92%; /* Creamy Input */
+    --ring: 330 50% 65%; /* Wine-based Ring */
 
-    --chart-1: 100 35% 70%; /* Green shade 1 */
-    --chart-2: 30 60% 75%;  /* Peach shade 1 */
-    --chart-3: 95 30% 65%;  /* Another Green shade */
-    --chart-4: 45 40% 80%;  /* Beige shade */
-    --chart-5: 25 50% 70%;  /* Terracotta/brownish shade */
+    --chart-1: 330 55% 60%; /* Primary shade for charts */
+    --chart-2: 20 65% 70%;  /* Accent shade for charts */
+    --chart-3: 330 40% 75%;  /* Secondary shade for charts */
+    --chart-4: 35 25% 85%;  /* Muted cream for charts */
+    --chart-5: 25 55% 75%;  /* Another warm accent */
 
     --radius: 0.5rem;
 
-    /* Sidebar specific theme */
-    --sidebar-background: 90 30% 93%; /* Light Muted Green for sidebar */
-    --sidebar-foreground: 90 25% 20%; /* Text on sidebar */
-    --sidebar-border: 90 25% 88%; /* Border for sidebar */
+    /* Sidebar specific theme (Light) */
+    --sidebar-background: 330 30% 93%; /* Light Muted Wine/Rose */
+    --sidebar-foreground: 330 25% 20%; /* Text on sidebar */
+    --sidebar-border: 330 25% 88%; /* Border for sidebar */
     
     --sidebar-primary: var(--primary); /* Use main primary for active items */
     --sidebar-primary-foreground: var(--primary-foreground);
     
-    --sidebar-accent: 95 30% 88%; /* Hover/accent in sidebar, lighter green */
-    --sidebar-accent-foreground: 90 25% 15%; /* Darker text for sidebar accent */
+    --sidebar-accent: 330 40% 88%; /* Hover/accent in sidebar, lighter rose */
+    --sidebar-accent-foreground: 330 25% 15%; /* Darker text for sidebar accent */
     --sidebar-ring: var(--ring);
   }
 
   .dark {
-    --background: 90 10% 10%; /* Dark Greenish-Gray */
-    --foreground: 90 15% 90%; /* Light text */
+    /* Dark Theme: Deep Wine, Gold/Rose Accents */
+    --background: 330 20% 12%; /* Very Dark Plum/Wine */
+    --foreground: 330 15% 88%; /* Light Rosy White */
 
-    --card: 90 10% 15%;
-    --card-foreground: 90 15% 85%;
+    --card: 330 20% 15%; /* Slightly Lighter Dark Plum */
+    --card-foreground: 330 15% 85%;
 
-    --popover: 90 10% 12%;
-    --popover-foreground: 90 15% 88%;
+    --popover: 330 20% 10%;
+    --popover-foreground: 330 15% 90%;
 
-    --primary: 100 40% 50%; /* Green, adjusted for dark mode */
-    --primary-foreground: 100 20% 90%; /* Light text for dark primary */
+    --primary: 330 60% 65%; /* Vibrant Wine, lighter for dark mode contrast */
+    --primary-foreground: 330 20% 10%; /* Dark text for primary */
 
-    --secondary: 95 15% 25%;
-    --secondary-foreground: 90 15% 85%;
+    --secondary: 330 40% 45%; /* Muted Deep Wine */
+    --secondary-foreground: 330 15% 85%;
 
-    --muted: 90 10% 20%;
-    --muted-foreground: 90 15% 60%;
+    --muted: 330 15% 25%; /* Dark Muted Plum */
+    --muted-foreground: 330 10% 60%;
 
-    --accent: 30 50% 60%; /* Peach/Terracotta for dark mode */
-    --accent-foreground: 30 20% 90%;
+    --accent: 30 70% 70%; /* Rose Gold / Bright Peach */
+    --accent-foreground: 30 30% 15%; /* Dark text for accent */
 
-    --destructive: 0 60% 50%;
+    --destructive: 0 65% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 90 10% 25%;
-    --input: 90 10% 20%;
-    --ring: 100 40% 60%;
+    --border: 330 20% 25%; /* Subtle Wine-tinted Border */
+    --input: 330 20% 20%; /* Dark Plum Input */
+    --ring: 330 60% 70%; /* Brighter Wine Ring */
     
-    --chart-1: 100 40% 60%;
-    --chart-2: 30 50% 55%;
-    --chart-3: 95 20% 50%;
-    --chart-4: 45 20% 60%;
-    --chart-5: 25 40% 50%;
+    --chart-1: 330 60% 70%; /* Primary shade for charts */
+    --chart-2: 30 70% 75%;  /* Accent shade for charts */
+    --chart-3: 330 40% 55%;  /* Secondary shade for charts */
+    --chart-4: 330 15% 35%;  /* Muted plum for charts */
+    --chart-5: 25 60% 70%;  /* Another warm accent */
 
     /* Sidebar dark theme */
-    --sidebar-background: 90 10% 12%;
-    --sidebar-foreground: 90 15% 88%;
-    --sidebar-border: 90 10% 20%;
+    --sidebar-background: 330 20% 10%; /* Darker Plum for sidebar */
+    --sidebar-foreground: 330 15% 88%;
+    --sidebar-border: 330 20% 22%;
     
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
     
-    --sidebar-accent: 95 15% 22%;
-    --sidebar-accent-foreground: 90 15% 90%;
+    --sidebar-accent: 330 30% 25%; /* Muted wine for hover */
+    --sidebar-accent-foreground: 330 15% 90%;
     --sidebar-ring: var(--ring);
   }
 }
