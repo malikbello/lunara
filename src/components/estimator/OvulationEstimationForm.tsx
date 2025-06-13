@@ -18,7 +18,7 @@ import { CheckCircle2, AlertTriangle, Info } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
 
 const estimationSchema = z.object({
-  additionalCycleData: z.string().optional().describe("BBT, ovulation test results, symptoms, etc."),
+  additionalCycleData: z.string().optional().describe("BBT, sleep, stress, heart rate, symptoms, etc."),
 });
 
 type EstimationFormData = z.infer<typeof estimationSchema>;
@@ -44,7 +44,7 @@ export default function OvulationEstimationForm() {
     setEstimationResult(null);
 
     const baseCycleInfo = `Last period started on ${new Date(cycleData.lastPeriodDate).toLocaleDateString()}. Average cycle length is ${cycleData.averageCycleLength} days. Average period length is ${cycleData.averagePeriodLength} days.`;
-    const fullCycleData = `${baseCycleInfo} ${data.additionalCycleData || ''}`.trim();
+    const fullCycleData = `${baseCycleInfo} Additional context: ${data.additionalCycleData || 'No additional data provided.'}`.trim();
 
     try {
       const input: EstimateTimeToOvulationInput = { cycleData: fullCycleData };
@@ -81,20 +81,20 @@ export default function OvulationEstimationForm() {
         <CardHeader>
           <CardTitle className="font-headline text-xl text-card-foreground">Estimate Your Ovulation</CardTitle>
           <CardDescription className="text-card-foreground/80">
-            Provide any additional cycle data like BBT, ovulation test results, or symptoms for a more accurate estimation. Your basic cycle data from onboarding will be automatically included.
+            For a more accurate AI-powered estimation, include details like Basal Body Temperature (BBT), sleep patterns, stress levels, heart rate data, or other symptoms. Your basic cycle data from onboarding is automatically included.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent>
             <div className="space-y-2">
-              <Label htmlFor="additionalCycleData" className="text-card-foreground">Additional Cycle Data (Optional)</Label>
+              <Label htmlFor="additionalCycleData" className="text-card-foreground">Additional Physiological & Symptom Data (Optional)</Label>
               <Controller
                 name="additionalCycleData"
                 control={control}
                 render={({ field }) => (
                   <Textarea
                     id="additionalCycleData"
-                    placeholder="e.g., BBT today was 36.7°C, positive ovulation test yesterday, noticed fertile cervical mucus..."
+                    placeholder="e.g., BBT today: 36.7°C. Sleep: 7.5 hours, good quality. Stress: low. Resting HR: 58bpm. Noticed fertile cervical mucus..."
                     rows={4}
                     {...field}
                     className="bg-input text-foreground placeholder:text-muted-foreground"

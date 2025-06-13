@@ -9,10 +9,10 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, Edit3, Save, ActivitySquare, ShieldAlert } from "lucide-react";
+import { CalendarIcon, Edit3, Save, ActivitySquare, ShieldAlert, Smartphone, Watch } from "lucide-react"; // Added Smartphone, Watch
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useOnboarding, OnboardingProvider } from '@/contexts/OnboardingContext'; // Ensure OnboardingProvider is available if this component isn't nested
+import { useOnboarding } from '@/contexts/OnboardingContext'; 
 import type { UserCycleData } from '@/lib/types';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,14 +30,17 @@ export default function SettingsPanel() {
   const { cycleData, updateCycleData, isOnboardingComplete } = useOnboarding();
   const [isIncognitoMode, setIsIncognitoMode] = useState(false);
   const [googleFitConnected, setGoogleFitConnected] = useState(false);
+  const [appleHealthConnected, setAppleHealthConnected] = useState(false);
+  const [fitbitConnected, setFitbitConnected] = useState(false);
+  const [otherWearablesConnected, setOtherWearablesConnected] = useState(false);
   const { toast } = useToast();
 
   const { control, handleSubmit, reset, formState: { errors, isSubmitting, isDirty } } = useForm<CycleFormData>({
     resolver: zodResolver(cycleDataSchema),
-    defaultValues: { // Provide default values to prevent undefined initial state
-      lastPeriodDate: new Date(), // Sensible default, will be overridden by reset
-      averageCycleLength: 0, // Will be overridden, use 0 or a typical value
-      averagePeriodLength: 0, // Will be overridden
+    defaultValues: { 
+      lastPeriodDate: new Date(), 
+      averageCycleLength: 28, 
+      averagePeriodLength: 5, 
     }
   });
   
@@ -49,9 +52,12 @@ export default function SettingsPanel() {
         averagePeriodLength: cycleData.averagePeriodLength,
       });
     }
-    // Load incognito & fit status from localStorage or settings
+    // Load integration statuses from localStorage
     setIsIncognitoMode(localStorage.getItem('lunara-incognito') === 'true');
     setGoogleFitConnected(localStorage.getItem('lunara-googlefit-connected') === 'true');
+    setAppleHealthConnected(localStorage.getItem('lunara-applehealth-connected') === 'true');
+    setFitbitConnected(localStorage.getItem('lunara-fitbit-connected') === 'true');
+    setOtherWearablesConnected(localStorage.getItem('lunara-otherwearables-connected') === 'true');
 
   }, [cycleData, reset]);
 
@@ -71,15 +77,27 @@ export default function SettingsPanel() {
     toast({ title: `Incognito Mode ${newMode ? 'Enabled' : 'Disabled'}`, description: newMode ? "Activity will not be logged." : "Activity logging resumed." });
   };
 
-  const toggleGoogleFit = () => {
-    // Placeholder for actual Google Fit connection logic
-    const newStatus = !googleFitConnected;
-    setGoogleFitConnected(newStatus);
-    localStorage.setItem('lunara-googlefit-connected', String(newStatus));
-    toast({ title: `Google Fit ${newStatus ? 'Connected' : 'Disconnected'}`, description: newStatus ? "Successfully connected to Google Fit." : "Disconnected from Google Fit."});
+  const createToggleHandler = (
+    name: string, 
+    connectedState: boolean, 
+    setter: React.Dispatch<React.SetStateAction<boolean>>,
+    storageKey: string
+  ) => {
+    return () => {
+      const newStatus = !connectedState;
+      setter(newStatus);
+      localStorage.setItem(storageKey, String(newStatus));
+      toast({ title: `${name} ${newStatus ? 'Connected' : 'Disconnected'}`, description: newStatus ? `Successfully connected to ${name}.` : `Disconnected from ${name}.`});
+    };
   };
 
-  if (!isOnboardingComplete && !cycleData) { // Check cycleData too, as it might load slightly after isOnboardingComplete
+  const toggleGoogleFit = createToggleHandler("Google Fit", googleFitConnected, setGoogleFitConnected, 'lunara-googlefit-connected');
+  const toggleAppleHealth = createToggleHandler("Apple Health", appleHealthConnected, setAppleHealthConnected, 'lunara-applehealth-connected');
+  const toggleFitbit = createToggleHandler("Fitbit", fitbitConnected, setFitbitConnected, 'lunara-fitbit-connected');
+  const toggleOtherWearables = createToggleHandler("Other Wearables", otherWearablesConnected, setOtherWearablesConnected, 'lunara-otherwearables-connected');
+
+
+  if (!isOnboardingComplete && !cycleData) {
     return (
       <Card className="shadow-md">
         <CardHeader>
@@ -97,7 +115,7 @@ export default function SettingsPanel() {
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle className="font-headline text-xl text-card-foreground flex items-center"><Edit3 className="mr-2 h-5 w-5"/>Cycle Data</CardTitle>
-          <CardDescription className="text-card-foreground/80">Update your menstrual cycle information.</CardDescription>
+          <CardDescription className="text-card-foreground/80">Update your menstrual cycle information. This is used for baseline predictions.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(handleCycleDataUpdate)}>
           <CardContent className="space-y-4">
@@ -166,19 +184,67 @@ export default function SettingsPanel() {
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle className="font-headline text-xl text-card-foreground flex items-center"><ActivitySquare className="mr-2 h-5 w-5"/>Integrations</CardTitle>
-          <CardDescription className="text-card-foreground/80">Manage connections to other services.</CardDescription>
+          <CardDescription className="text-card-foreground/80">Connect your wearables and health apps for passive data collection (e.g., BBT, sleep, stress, heart rate).</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
-            <Label htmlFor="google-fit-switch" className="flex flex-col space-y-1">
-              <span className="font-medium text-card-foreground">Google Fit</span>
-              <span className="text-xs text-muted-foreground">Sync your health data from Google Fit.</span>
+            <Label htmlFor="google-fit-switch" className="flex items-center space-x-2">
+              <img src="https://www.gstatic.com/images/branding/product/1x/fitness_48dp.png" alt="Google Fit" className="h-6 w-6" data-ai-hint="google fit logo"/>
+              <div className="flex flex-col">
+                <span className="font-medium text-card-foreground">Google Fit</span>
+                <span className="text-xs text-muted-foreground">Sync health data.</span>
+              </div>
             </Label>
             <Switch
               id="google-fit-switch"
               checked={googleFitConnected}
               onCheckedChange={toggleGoogleFit}
               aria-label="Toggle Google Fit connection"
+            />
+          </div>
+          <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
+            <Label htmlFor="apple-health-switch" className="flex items-center space-x-2">
+              <Smartphone className="h-6 w-6 text-card-foreground/80"/>
+              <div className="flex flex-col">
+                <span className="font-medium text-card-foreground">Apple Health</span>
+                <span className="text-xs text-muted-foreground">Sync from iPhone/Watch.</span>
+              </div>
+            </Label>
+            <Switch
+              id="apple-health-switch"
+              checked={appleHealthConnected}
+              onCheckedChange={toggleAppleHealth}
+              aria-label="Toggle Apple Health connection"
+            />
+          </div>
+          <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
+            <Label htmlFor="fitbit-switch" className="flex items-center space-x-2">
+              <Watch className="h-6 w-6 text-card-foreground/80"/>
+               <div className="flex flex-col">
+                <span className="font-medium text-card-foreground">Fitbit</span>
+                <span className="text-xs text-muted-foreground">Sync from Fitbit devices.</span>
+              </div>
+            </Label>
+            <Switch
+              id="fitbit-switch"
+              checked={fitbitConnected}
+              onCheckedChange={toggleFitbit}
+              aria-label="Toggle Fitbit connection"
+            />
+          </div>
+          <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
+            <Label htmlFor="other-wearables-switch" className="flex items-center space-x-2">
+              <ActivitySquare className="h-6 w-6 text-card-foreground/80" />
+               <div className="flex flex-col">
+                <span className="font-medium text-card-foreground">Other Wearables</span>
+                <span className="text-xs text-muted-foreground">Connect other smart devices.</span>
+              </div>
+            </Label>
+            <Switch
+              id="other-wearables-switch"
+              checked={otherWearablesConnected}
+              onCheckedChange={toggleOtherWearables}
+              aria-label="Toggle other wearables connection"
             />
           </div>
         </CardContent>
@@ -202,7 +268,6 @@ export default function SettingsPanel() {
               aria-label="Toggle Incognito Mode"
             />
           </div>
-          {/* Add more privacy settings here, e.g., data export, account deletion request */}
         </CardContent>
       </Card>
     </div>

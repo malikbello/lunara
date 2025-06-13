@@ -4,35 +4,40 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress'; // Using Progress for score for now
+import { Progress } from '@/components/ui/progress'; 
 import { Smile, Frown, Meh, Edit3 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import type { MoodLog } from '@/lib/types';
 
-// Placeholder for fertility score calculation
-const calculateFertilityScore = () => Math.floor(Math.random() * 100) + 1;
+const calculateFertilityScore = () => {
+  const [score, setScore] = useState(0);
+  useEffect(() => {
+    setScore(Math.floor(Math.random() * 100) + 1);
+  }, []);
+  return score;
+}
+
 
 const moodOptions = [
   { mood: 'Happy', icon: <Smile className="h-6 w-6 text-green-500" /> },
   { mood: 'Okay', icon: <Meh className="h-6 w-6 text-yellow-500" /> },
   { mood: 'Sad', icon: <Frown className="h-6 w-6 text-blue-500" /> },
-  { mood: 'Stressed', icon: <Frown className="h-6 w-6 text-red-500" /> }, // Example, use appropriate icon
+  { mood: 'Stressed', icon: <Frown className="h-6 w-6 text-red-500" /> }, 
   { mood: 'Energetic', icon: <Smile className="h-6 w-6 text-orange-500" /> },
 ];
 
 
 export default function DailyOverview() {
-  const [fertilityScore, setFertilityScore] = useState(0);
+  const fertilityScore = calculateFertilityScore();
   const [currentMood, setCurrentMood] = useState<string | null>(null);
   const [moodNotes, setMoodNotes] = useState('');
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    setFertilityScore(calculateFertilityScore());
     // Load today's mood if already logged
     const today = new Date().toISOString().split('T')[0];
     const storedMoodsRaw = localStorage.getItem('lunara-mood-logs');
@@ -63,7 +68,6 @@ export default function DailyOverview() {
     if (storedLogsRaw) {
       logs = JSON.parse(storedLogsRaw);
     }
-    // Remove existing log for today if any, then add new one
     logs = logs.filter(log => log.date !== today);
     logs.push(newLog);
     localStorage.setItem('lunara-mood-logs', JSON.stringify(logs));
@@ -82,7 +86,7 @@ export default function DailyOverview() {
           <CardDescription className="text-card-foreground/80">Your estimated fertility level today.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center">
-          <div className="relative h-32 w-32"> {/* Placeholder for ProgressRing */}
+          <div className="relative h-32 w-32"> 
             <svg className="transform -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
               <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-gray-700" strokeWidth="2"></circle>
               <circle
@@ -110,7 +114,7 @@ export default function DailyOverview() {
       <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
         <CardHeader>
           <CardTitle className="font-headline text-xl text-card-foreground">How are you feeling?</CardTitle>
-          <CardDescription className="text-card-foreground/80">Log your mood for today.</CardDescription>
+          <CardDescription className="text-card-foreground/80">Log your mood and any lifestyle notes.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center">
             {currentMood && !isMoodModalOpen ? (
@@ -133,7 +137,7 @@ export default function DailyOverview() {
         <DialogContent className="sm:max-w-[425px] bg-card text-card-foreground">
           <DialogHeader>
             <DialogTitle className="font-headline">Log Your Mood</DialogTitle>
-            <DialogDescription>Select how you're feeling and add any notes.</DialogDescription>
+            <DialogDescription>Select how you're feeling and add any notes (e.g., lifestyle, symptoms, habits).</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="flex justify-around gap-2 flex-wrap">
@@ -157,7 +161,7 @@ export default function DailyOverview() {
                 id="moodNotes"
                 value={moodNotes}
                 onChange={(e) => setMoodNotes(e.target.value)}
-                placeholder="Any specific feelings, events, or observations..."
+                placeholder="Any specific feelings, events, lifestyle notes, or observations..."
                 className="bg-input text-foreground placeholder:text-muted-foreground"
               />
             </div>

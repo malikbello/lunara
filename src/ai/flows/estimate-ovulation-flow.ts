@@ -16,7 +16,7 @@ const EstimateTimeToOvulationInputSchema = z.object({
   cycleData: z
     .string()
     .describe(
-      'A string containing the user\u2019s logged cycle data, including previous period dates, cycle lengths, and any BBT or ovulation test results.'
+      'A string containing the user’s logged cycle data, including previous period dates, cycle lengths, and optionally basal body temperature readings, sleep patterns, stress levels, heart rate data, and any other relevant symptoms or notes for a more comprehensive analysis.'
     ),
 });
 export type EstimateTimeToOvulationInput = z.infer<typeof EstimateTimeToOvulationInputSchema>;
@@ -51,9 +51,10 @@ const prompt = ai.definePrompt({
   input: {schema: EstimateTimeToOvulationInputSchema},
   output: {schema: EstimateTimeToOvulationOutputSchema},
   prompt: `You are an AI assistant specialized in fertility tracking and ovulation prediction.
-  Based on the user's logged cycle data, estimate the time to ovulation, provide a confidence level for the estimation, and offer personalized tips.
+  Based on the user's logged cycle data (which may include basal body temperature, sleep data, stress levels, heart rate data, and additional symptoms), estimate the time to ovulation, provide a confidence level for the estimation, and offer personalized tips.
+  Prioritize recent data if available.
 
-  Cycle Data: {{{cycleData}}}
+  Cycle Data and Physiological Signals: {{{cycleData}}}
 
   Please provide the estimated time to ovulation in days, a confidence level (High, Medium, or Low), and any relevant tips for the user.
   Format the output as a JSON object.`,
