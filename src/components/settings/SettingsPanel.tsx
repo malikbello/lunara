@@ -34,13 +34,19 @@ export default function SettingsPanel() {
 
   const { control, handleSubmit, reset, formState: { errors, isSubmitting, isDirty } } = useForm<CycleFormData>({
     resolver: zodResolver(cycleDataSchema),
+    defaultValues: { // Provide default values to prevent undefined initial state
+      lastPeriodDate: new Date(), // Sensible default, will be overridden by reset
+      averageCycleLength: 0, // Will be overridden, use 0 or a typical value
+      averagePeriodLength: 0, // Will be overridden
+    }
   });
   
   useEffect(() => {
     if (cycleData) {
       reset({
-        ...cycleData,
         lastPeriodDate: parseISO(cycleData.lastPeriodDate),
+        averageCycleLength: cycleData.averageCycleLength,
+        averagePeriodLength: cycleData.averagePeriodLength,
       });
     }
     // Load incognito & fit status from localStorage or settings
@@ -73,7 +79,7 @@ export default function SettingsPanel() {
     toast({ title: `Google Fit ${newStatus ? 'Connected' : 'Disconnected'}`, description: newStatus ? "Successfully connected to Google Fit." : "Disconnected from Google Fit."});
   };
 
-  if (!isOnboardingComplete) {
+  if (!isOnboardingComplete && !cycleData) { // Check cycleData too, as it might load slightly after isOnboardingComplete
     return (
       <Card className="shadow-md">
         <CardHeader>
@@ -135,7 +141,7 @@ export default function SettingsPanel() {
               <Controller
                 name="averageCycleLength"
                 control={control}
-                render={({ field }) => <Input id="averageCycleLengthSet" type="number" {...field} className="mt-1 bg-input text-foreground placeholder:text-muted-foreground" />}
+                render={({ field }) => <Input id="averageCycleLengthSet" type="number" {...field} value={field.value ?? ''} className="mt-1 bg-input text-foreground placeholder:text-muted-foreground" />}
               />
               {errors.averageCycleLength && <p className="text-sm text-destructive mt-1">{errors.averageCycleLength.message}</p>}
             </div>
@@ -144,7 +150,7 @@ export default function SettingsPanel() {
               <Controller
                 name="averagePeriodLength"
                 control={control}
-                render={({ field }) => <Input id="averagePeriodLengthSet" type="number" {...field} className="mt-1 bg-input text-foreground placeholder:text-muted-foreground" />}
+                render={({ field }) => <Input id="averagePeriodLengthSet" type="number" {...field} value={field.value ?? ''} className="mt-1 bg-input text-foreground placeholder:text-muted-foreground" />}
               />
               {errors.averagePeriodLength && <p className="text-sm text-destructive mt-1">{errors.averagePeriodLength.message}</p>}
             </div>
