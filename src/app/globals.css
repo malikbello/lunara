@@ -9,101 +9,100 @@ body {
 
 @layer base {
   :root {
-    --background: 25 100% 97%; /* Seashell */
-    --foreground: 25 20% 25%; /* Darker brown/gray for readability on Seashell */
+    --background: 45 50% 96%; /* Light Beige */
+    --foreground: 90 25% 25%; /* Dark Muted Green-Brown */
 
-    --card: 240 60% 97%; /* Lavender for card background */
-    --card-foreground: 240 30% 25%; /* Darker text for cards */
+    --card: 40 40% 94%; /* Slightly darker Beige for card */
+    --card-foreground: 90 25% 25%; /* Dark Muted Green-Brown for card text */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover: 45 50% 98%; /* Light beige for popover */
+    --popover-foreground: 90 25% 20%; /* Darker green for popover text */
 
-    --primary: 28 100% 92%; /* Peachpuff for CTAs */
-    --primary-foreground: 28 50% 20%; /* Darker text for Peachpuff */
+    --primary: 100 35% 60%; /* Calming Green */
+    --primary-foreground: 100 20% 95%; /* Light text for primary green */
 
-    --secondary: 240 50% 90%; /* Lighter Lavender variant for secondary elements */
-    --secondary-foreground: 240 30% 20%;
+    --secondary: 95 30% 75%; /* Lighter Green variant for secondary elements */
+    --secondary-foreground: 90 25% 20%; /* Darker text for secondary */
 
-    --muted: 240 30% 95%; /* Muted Lavender */
-    --muted-foreground: 240 20% 55%;
+    --muted: 50 30% 90%; /* Muted Beige */
+    --muted-foreground: 90 20% 50%; /* Muted green-brown text */
 
-    --accent: 240 60% 93%; /* Lavender, slightly different from card for other accents */
-    --accent-foreground: 240 30% 20%;
+    --accent: 30 60% 80%; /* Soft Peach/Terracotta for accent */
+    --accent-foreground: 30 30% 25%; /* Darker text for accent */
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 70% 60%; /* Adjusted for visibility, keeping a warm tone */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 30% 88%; /* Lavender-tinged border */
-    --input: 240 30% 94%; /* Lavender-tinged input background */
-    --ring: 28 100% 85%; /* Peachpuff-based ring */
+    --border: 90 20% 85%; /* Green-tinged border */
+    --input: 50 30% 92%; /* Beige-tinged input background */
+    --ring: 100 40% 70%; /* Green-based ring */
 
-    --chart-1: 28 90% 80%;
-    --chart-2: 240 70% 85%;
-    --chart-3: 30 80% 88%;
-    --chart-4: 250 60% 80%;
-    --chart-5: 20 70% 85%;
+    --chart-1: 100 35% 70%; /* Green shade 1 */
+    --chart-2: 30 60% 75%;  /* Peach shade 1 */
+    --chart-3: 95 30% 65%;  /* Another Green shade */
+    --chart-4: 45 40% 80%;  /* Beige shade */
+    --chart-5: 25 50% 70%;  /* Terracotta/brownish shade */
 
     --radius: 0.5rem;
 
     /* Sidebar specific theme */
-    --sidebar-background: 240 60% 95%; /* Slightly darker Lavender for sidebar */
-    --sidebar-foreground: 240 30% 25%; /* Text on sidebar */
-    --sidebar-border: 240 40% 90%;
+    --sidebar-background: 90 30% 93%; /* Light Muted Green for sidebar */
+    --sidebar-foreground: 90 25% 20%; /* Text on sidebar */
+    --sidebar-border: 90 25% 88%; /* Border for sidebar */
     
-    --sidebar-primary: var(--primary); /* Peachpuff for active/primary items in sidebar */
+    --sidebar-primary: var(--primary); /* Use main primary for active items */
     --sidebar-primary-foreground: var(--primary-foreground);
     
-    --sidebar-accent: 240 60% 90%; /* Hover/accent in sidebar, darker Lavender */
-    --sidebar-accent-foreground: 240 30% 20%;
+    --sidebar-accent: 95 30% 88%; /* Hover/accent in sidebar, lighter green */
+    --sidebar-accent-foreground: 90 25% 15%; /* Darker text for sidebar accent */
     --sidebar-ring: var(--ring);
   }
 
   .dark {
-    /* Define dark theme variables if needed, for now keep them similar or adjust for a darker palette */
-    --background: 240 10% 10%;
-    --foreground: 240 10% 90%;
+    --background: 90 10% 10%; /* Dark Greenish-Gray */
+    --foreground: 90 15% 90%; /* Light text */
 
-    --card: 240 10% 15%;
-    --card-foreground: 240 10% 85%;
+    --card: 90 10% 15%;
+    --card-foreground: 90 15% 85%;
 
-    --popover: 240 10% 10%;
-    --popover-foreground: 240 10% 90%;
+    --popover: 90 10% 12%;
+    --popover-foreground: 90 15% 88%;
 
-    --primary: 28 100% 80%; /* Peachpuff slightly adjusted for dark */
-    --primary-foreground: 28 50% 15%;
+    --primary: 100 40% 50%; /* Green, adjusted for dark mode */
+    --primary-foreground: 100 20% 90%; /* Light text for dark primary */
 
-    --secondary: 240 15% 25%;
-    --secondary-foreground: 240 10% 85%;
+    --secondary: 95 15% 25%;
+    --secondary-foreground: 90 15% 85%;
 
-    --muted: 240 10% 20%;
-    --muted-foreground: 240 10% 60%;
+    --muted: 90 10% 20%;
+    --muted-foreground: 90 15% 60%;
 
-    --accent: 240 30% 30%;
-    --accent-foreground: 240 10% 90%;
+    --accent: 30 50% 60%; /* Peach/Terracotta for dark mode */
+    --accent-foreground: 30 20% 90%;
 
-    --destructive: 0 70% 50%;
+    --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 10% 25%;
-    --input: 240 10% 20%;
-    --ring: 28 100% 75%;
+    --border: 90 10% 25%;
+    --input: 90 10% 20%;
+    --ring: 100 40% 60%;
     
-    --chart-1: 28 90% 70%;
-    --chart-2: 240 70% 75%;
-    --chart-3: 30 80% 78%;
-    --chart-4: 250 60% 70%;
-    --chart-5: 20 70% 75%;
+    --chart-1: 100 40% 60%;
+    --chart-2: 30 50% 55%;
+    --chart-3: 95 20% 50%;
+    --chart-4: 45 20% 60%;
+    --chart-5: 25 40% 50%;
 
     /* Sidebar dark theme */
-    --sidebar-background: 240 10% 12%;
-    --sidebar-foreground: 240 10% 88%;
-    --sidebar-border: 240 10% 20%;
+    --sidebar-background: 90 10% 12%;
+    --sidebar-foreground: 90 15% 88%;
+    --sidebar-border: 90 10% 20%;
     
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
     
-    --sidebar-accent: 240 15% 22%;
-    --sidebar-accent-foreground: 240 10% 90%;
+    --sidebar-accent: 95 15% 22%;
+    --sidebar-accent-foreground: 90 15% 90%;
     --sidebar-ring: var(--ring);
   }
 }

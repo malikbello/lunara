@@ -106,7 +106,7 @@ export default function ChatWindow() {
             >
               {msg.sender === 'luna' && (
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="https://placehold.co/100x100/E6E6FA/7F00FF.png?text=L" alt="Luna" data-ai-hint="bot avatar" />
+                  <AvatarImage src="https://placehold.co/100x100/F5F5DC/556B2F.png?text=L" alt="Luna" data-ai-hint="bot avatar" />
                   <AvatarFallback className="bg-primary text-primary-foreground">L</AvatarFallback>
                 </Avatar>
               )}
@@ -133,7 +133,7 @@ export default function ChatWindow() {
           {isLoading && (
             <div className="flex items-end gap-2 justify-start">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="https://placehold.co/100x100/E6E6FA/7F00FF.png?text=L" alt="Luna" data-ai-hint="bot avatar" />
+                <AvatarImage src="https://placehold.co/100x100/F5F5DC/556B2F.png?text=L" alt="Luna" data-ai-hint="bot avatar" />
                 <AvatarFallback className="bg-primary text-primary-foreground">L</AvatarFallback>
               </Avatar>
               <div className="max-w-[70%] rounded-lg px-4 py-2 text-sm shadow bg-accent text-accent-foreground rounded-bl-none">

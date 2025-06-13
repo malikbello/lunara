@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Leaf } from 'lucide-react';
 
 interface AppLogoProps {
   className?: string;
@@ -13,8 +14,15 @@ const AppLogo: React.FC<AppLogoProps> = ({ className, size = 'medium' }) => {
     large: 'text-4xl',
   };
 
+  const iconSizeClasses = {
+    small: 'h-5 w-5',
+    medium: 'h-6 w-6',
+    large: 'h-7 w-7',
+  };
+
   return (
-    <div className={`font-headline font-bold text-primary ${sizeClasses[size]} ${className}`}>
+    <div className={`flex items-center font-headline font-bold text-primary ${sizeClasses[size]} ${className}`}>
+      <Leaf className={`mr-1 md:mr-2 ${iconSizeClasses[size]}`} />
       Lunara
     </div>
   );
