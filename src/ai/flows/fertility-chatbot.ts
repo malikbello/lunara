@@ -52,7 +52,7 @@ const prompt = ai.definePrompt({
       },
       {
         category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-        threshold: 'BLOCK_LOW_AND_ABOVE',
+        threshold: 'BLOCK_MEDIUM_AND_ABOVE', // Relaxed from BLOCK_LOW_AND_ABOVE
       },
     ],
   }
