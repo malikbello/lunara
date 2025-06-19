@@ -17,11 +17,9 @@ export default function ReportView() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Load mood logs from localStorage
     const storedMoodsRaw = localStorage.getItem('lunara-mood-logs');
     if (storedMoodsRaw) {
       const storedMoods: MoodLog[] = JSON.parse(storedMoodsRaw);
-      // Sort by date, most recent first
       storedMoods.sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime());
       setMoodLogs(storedMoods);
     }
@@ -35,7 +33,6 @@ export default function ReportView() {
 
     let csvContent = "data:text/csv;charset=utf-8,";
     
-    // Cycle Data Header
     csvContent += "Category,Parameter,Value\r\n";
     if (cycleData) {
       csvContent += `Cycle Data,Last Period Date,${format(parseISO(cycleData.lastPeriodDate), "yyyy-MM-dd")}\r\n`;
@@ -44,12 +41,11 @@ export default function ReportView() {
     } else {
       csvContent += `Cycle Data,N/A,N/A\r\n`;
     }
-    csvContent += "\r\n"; // Empty line separator
+    csvContent += "\r\n"; 
 
-    // Mood Logs Header
     csvContent += "Date,Mood,Notes\r\n";
     moodLogs.forEach(log => {
-      const notes = log.notes ? `"${log.notes.replace(/"/g, '""')}"` : ""; // Escape quotes in notes
+      const notes = log.notes ? `"${log.notes.replace(/"/g, '""')}"` : ""; 
       csvContent += `${format(parseISO(log.date), "yyyy-MM-dd")},${log.mood},${notes}\r\n`;
     });
 
@@ -82,40 +78,47 @@ export default function ReportView() {
         </CardHeader>
         <CardContent>
           {cycleData && (
-            <div className="mb-6 p-4 border border-border rounded-md bg-accent/30">
-              <h3 className="text-lg font-semibold text-foreground mb-2 flex items-center"><CalendarDays className="mr-2 h-5 w-5 text-primary"/>Current Cycle Configuration</h3>
-              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-                <li>Last Period Started: {format(parseISO(cycleData.lastPeriodDate), "PPP")}</li>
-                <li>Average Cycle Length: {cycleData.averageCycleLength} days</li>
-                <li>Average Period Length: {cycleData.averagePeriodLength} days</li>
+            <div className="mb-6 p-4 border border-input rounded-lg bg-card shadow-sm">
+              <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center">
+                <CalendarDays className="mr-2 h-5 w-5 text-primary"/>Current Cycle Configuration
+              </h3>
+              <ul className="space-y-1.5 text-sm text-muted-foreground">
+                <li><span className="font-medium text-foreground/90">Last Period Started:</span> {format(parseISO(cycleData.lastPeriodDate), "PPP")}</li>
+                <li><span className="font-medium text-foreground/90">Average Cycle Length:</span> {cycleData.averageCycleLength} days</li>
+                <li><span className="font-medium text-foreground/90">Average Period Length:</span> {cycleData.averagePeriodLength} days</li>
               </ul>
             </div>
           )}
 
-          <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center"><Smile className="mr-2 h-5 w-5 text-primary"/>Mood Logs</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center">
+            <Smile className="mr-2 h-5 w-5 text-primary"/>Mood Logs
+          </h3>
           {moodLogs.length > 0 ? (
-            <div className="overflow-x-auto rounded-md border border-border">
+            <div className="overflow-x-auto rounded-lg border border-input bg-card shadow-sm">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-muted/50 hover:bg-muted/60">
-                    <TableHead className="text-muted-foreground">Date</TableHead>
-                    <TableHead className="text-muted-foreground">Mood</TableHead>
-                    <TableHead className="text-muted-foreground">Notes</TableHead>
+                  <TableRow className="bg-muted/30 hover:bg-muted/40">
+                    <TableHead className="text-muted-foreground font-semibold">Date</TableHead>
+                    <TableHead className="text-muted-foreground font-semibold">Mood</TableHead>
+                    <TableHead className="text-muted-foreground font-semibold">Notes</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {moodLogs.map((log) => (
-                    <TableRow key={log.id} className="hover:bg-accent/20">
-                      <TableCell className="text-card-foreground">{format(parseISO(log.date), "PPP")}</TableCell>
-                      <TableCell className="text-card-foreground">{log.mood}</TableCell>
-                      <TableCell className="text-card-foreground max-w-xs truncate">{log.notes || '-'}</TableCell>
+                    <TableRow key={log.id} className="hover:bg-accent/10">
+                      <TableCell className="text-card-foreground py-3">{format(parseISO(log.date), "PPP")}</TableCell>
+                      <TableCell className="text-card-foreground py-3">{log.mood}</TableCell>
+                      <TableCell className="text-card-foreground py-3 max-w-xs truncate">{log.notes || '—'}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
           ) : (
-            <p className="text-muted-foreground text-center py-4">No mood logs recorded yet.</p>
+            <div className="text-center py-8 px-4 border border-dashed border-border rounded-lg bg-muted/20">
+              <p className="text-muted-foreground">No mood logs recorded yet.</p>
+              <p className="text-sm text-muted-foreground mt-1">Start logging your mood on the dashboard to see it here.</p>
+            </div>
           )}
         </CardContent>
       </Card>

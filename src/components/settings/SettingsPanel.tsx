@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, Edit3, Save, ActivitySquare, ShieldAlert, Smartphone, Watch } from "lucide-react"; // Added Smartphone, Watch
+import { CalendarIcon, Edit3, Save, ActivitySquare, ShieldAlert, Smartphone, Watch } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useOnboarding } from '@/contexts/OnboardingContext'; 
@@ -21,8 +21,8 @@ import { useToast } from '@/hooks/use-toast';
 
 const cycleDataSchema = z.object({
   lastPeriodDate: z.date({ required_error: "Please select the first day of your last period." }),
-  averageCycleLength: z.coerce.number().min(15).max(60),
-  averagePeriodLength: z.coerce.number().min(1).max(15),
+  averageCycleLength: z.coerce.number().min(15, "Cycle length must be at least 15 days.").max(60, "Cycle length cannot exceed 60 days."),
+  averagePeriodLength: z.coerce.number().min(1, "Period length must be at least 1 day.").max(15, "Period length cannot exceed 15 days."),
 });
 type CycleFormData = z.infer<typeof cycleDataSchema>;
 
@@ -38,9 +38,9 @@ export default function SettingsPanel() {
   const { control, handleSubmit, reset, formState: { errors, isSubmitting, isDirty } } = useForm<CycleFormData>({
     resolver: zodResolver(cycleDataSchema),
     defaultValues: { 
-      lastPeriodDate: new Date(), 
-      averageCycleLength: 28, 
-      averagePeriodLength: 5, 
+      lastPeriodDate: cycleData ? parseISO(cycleData.lastPeriodDate) : new Date(), 
+      averageCycleLength: cycleData?.averageCycleLength ?? 28, 
+      averagePeriodLength: cycleData?.averagePeriodLength ?? 5, 
     }
   });
   
@@ -52,7 +52,6 @@ export default function SettingsPanel() {
         averagePeriodLength: cycleData.averagePeriodLength,
       });
     }
-    // Load integration statuses from localStorage
     setIsIncognitoMode(localStorage.getItem('lunara-incognito') === 'true');
     setGoogleFitConnected(localStorage.getItem('lunara-googlefit-connected') === 'true');
     setAppleHealthConnected(localStorage.getItem('lunara-applehealth-connected') === 'true');
@@ -110,6 +109,11 @@ export default function SettingsPanel() {
     );
   }
 
+  const integrationItemClass = "flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors";
+  const integrationLabelClass = "flex items-center space-x-3";
+  const integrationIconClass = "h-6 w-6 text-primary";
+
+
   return (
     <div className="space-y-8">
       <Card className="shadow-lg">
@@ -118,8 +122,8 @@ export default function SettingsPanel() {
           <CardDescription className="text-card-foreground/80">Update your menstrual cycle information. This is used for baseline predictions.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(handleCycleDataUpdate)}>
-          <CardContent className="space-y-4">
-            <div>
+          <CardContent className="space-y-6">
+            <div className="space-y-1.5">
               <Label htmlFor="lastPeriodDateSet" className="text-card-foreground">First Day of Last Period</Label>
                <Controller
                   name="lastPeriodDate"
@@ -131,7 +135,7 @@ export default function SettingsPanel() {
                           id="lastPeriodDateSet"
                           variant={"outline"}
                           className={cn(
-                            "w-full justify-start text-left font-normal mt-1 border-input hover:bg-accent/50",
+                            "w-full justify-start text-left font-normal border-input hover:bg-accent/10",
                             !field.value && "text-muted-foreground"
                           )}
                           aria-label="Select last period date"
@@ -143,7 +147,7 @@ export default function SettingsPanel() {
                       <PopoverContent className="w-auto p-0 bg-popover text-popover-foreground">
                         <Calendar
                           mode="single"
-                          selected={field.value}
+                          selected={field.value instanceof Date ? field.value : undefined}
                           onSelect={field.onChange}
                           disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                           initialFocus
@@ -154,26 +158,26 @@ export default function SettingsPanel() {
                 />
               {errors.lastPeriodDate && <p className="text-sm text-destructive mt-1">{errors.lastPeriodDate.message}</p>}
             </div>
-            <div>
+            <div className="space-y-1.5">
               <Label htmlFor="averageCycleLengthSet" className="text-card-foreground">Average Cycle Length (days)</Label>
               <Controller
                 name="averageCycleLength"
                 control={control}
-                render={({ field }) => <Input id="averageCycleLengthSet" type="number" {...field} value={field.value ?? ''} className="mt-1 bg-input text-foreground placeholder:text-muted-foreground" />}
+                render={({ field }) => <Input id="averageCycleLengthSet" type="number" {...field} value={field.value ?? ''} className="bg-input text-foreground placeholder:text-muted-foreground" />}
               />
               {errors.averageCycleLength && <p className="text-sm text-destructive mt-1">{errors.averageCycleLength.message}</p>}
             </div>
-            <div>
+            <div className="space-y-1.5">
               <Label htmlFor="averagePeriodLengthSet" className="text-card-foreground">Average Period Length (days)</Label>
               <Controller
                 name="averagePeriodLength"
                 control={control}
-                render={({ field }) => <Input id="averagePeriodLengthSet" type="number" {...field} value={field.value ?? ''} className="mt-1 bg-input text-foreground placeholder:text-muted-foreground" />}
+                render={({ field }) => <Input id="averagePeriodLengthSet" type="number" {...field} value={field.value ?? ''} className="bg-input text-foreground placeholder:text-muted-foreground" />}
               />
               {errors.averagePeriodLength && <p className="text-sm text-destructive mt-1">{errors.averagePeriodLength.message}</p>}
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="pt-2">
             <Button type="submit" disabled={isSubmitting || !isDirty} className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Save className="mr-2 h-4 w-4"/> {isSubmitting ? "Saving..." : "Save Cycle Data"}
             </Button>
@@ -187,8 +191,8 @@ export default function SettingsPanel() {
           <CardDescription className="text-card-foreground/80">Connect your wearables and health apps for passive data collection (e.g., BBT, sleep, stress, heart rate).</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
-            <Label htmlFor="google-fit-switch" className="flex items-center space-x-2">
+          <div className={integrationItemClass}>
+            <Label htmlFor="google-fit-switch" className={integrationLabelClass}>
               <img src="https://www.gstatic.com/images/branding/product/1x/fitness_48dp.png" alt="Google Fit" className="h-6 w-6" data-ai-hint="google fit logo"/>
               <div className="flex flex-col">
                 <span className="font-medium text-card-foreground">Google Fit</span>
@@ -202,9 +206,9 @@ export default function SettingsPanel() {
               aria-label="Toggle Google Fit connection"
             />
           </div>
-          <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
-            <Label htmlFor="apple-health-switch" className="flex items-center space-x-2">
-              <Smartphone className="h-6 w-6 text-card-foreground/80"/>
+          <div className={integrationItemClass}>
+            <Label htmlFor="apple-health-switch" className={integrationLabelClass}>
+              <Smartphone className={integrationIconClass}/>
               <div className="flex flex-col">
                 <span className="font-medium text-card-foreground">Apple Health</span>
                 <span className="text-xs text-muted-foreground">Sync from iPhone/Watch.</span>
@@ -217,9 +221,9 @@ export default function SettingsPanel() {
               aria-label="Toggle Apple Health connection"
             />
           </div>
-          <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
-            <Label htmlFor="fitbit-switch" className="flex items-center space-x-2">
-              <Watch className="h-6 w-6 text-card-foreground/80"/>
+          <div className={integrationItemClass}>
+            <Label htmlFor="fitbit-switch" className={integrationLabelClass}>
+              <Watch className={integrationIconClass}/>
                <div className="flex flex-col">
                 <span className="font-medium text-card-foreground">Fitbit</span>
                 <span className="text-xs text-muted-foreground">Sync from Fitbit devices.</span>
@@ -232,9 +236,9 @@ export default function SettingsPanel() {
               aria-label="Toggle Fitbit connection"
             />
           </div>
-          <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
-            <Label htmlFor="other-wearables-switch" className="flex items-center space-x-2">
-              <ActivitySquare className="h-6 w-6 text-card-foreground/80" />
+          <div className={integrationItemClass}>
+            <Label htmlFor="other-wearables-switch" className={integrationLabelClass}>
+              <ActivitySquare className={integrationIconClass} />
                <div className="flex flex-col">
                 <span className="font-medium text-card-foreground">Other Wearables</span>
                 <span className="text-xs text-muted-foreground">Connect other smart devices.</span>
@@ -256,8 +260,8 @@ export default function SettingsPanel() {
           <CardDescription className="text-card-foreground/80">Control your privacy settings.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-           <div className="flex items-center justify-between p-3 rounded-md border border-border bg-accent/20">
-            <Label htmlFor="incognito-switch" className="flex flex-col space-y-1">
+           <div className={integrationItemClass}>
+            <Label htmlFor="incognito-switch" className="flex flex-col space-y-1 flex-grow">
               <span className="font-medium text-card-foreground">Incognito Mode</span>
               <span className="text-xs text-muted-foreground">When enabled, your activity and logs won't be saved.</span>
             </Label>

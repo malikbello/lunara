@@ -14,7 +14,7 @@ import { estimateTimeToOvulation, EstimateTimeToOvulationInput, EstimateTimeToOv
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle2, AlertTriangle, Info } from "lucide-react";
+import { CheckCircle2, AlertTriangle, Info, Lightbulb } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
 
 const estimationSchema = z.object({
@@ -65,7 +65,7 @@ export default function OvulationEstimationForm() {
 
   if (!isOnboardingComplete) {
      return (
-        <Alert variant="default" className="bg-accent text-accent-foreground border-accent-foreground/30">
+        <Alert variant="default" className="bg-accent/20 text-accent-foreground border-accent/30">
           <Info className="h-4 w-4" />
           <AlertTitle>Onboarding Required</AlertTitle>
           <AlertDescription>
@@ -103,7 +103,7 @@ export default function OvulationEstimationForm() {
               />
             </div>
           </CardContent>
-          <CardFooter className="flex justify-end">
+          <CardFooter className="flex justify-end pt-2">
             <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-primary-foreground">
               {isLoading ? 'Estimating...' : 'Estimate Ovulation'}
             </Button>
@@ -114,7 +114,7 @@ export default function OvulationEstimationForm() {
       {isLoading && (
         <Card className="shadow-md">
           <CardHeader><CardTitle className="text-card-foreground">Estimation in Progress...</CardTitle></CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-3 pt-4">
             <Skeleton className="h-6 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
             <Skeleton className="h-4 w-full" />
@@ -132,36 +132,37 @@ export default function OvulationEstimationForm() {
       )}
 
       {estimationResult && !isLoading && (
-        <Card className="shadow-xl bg-gradient-to-br from-primary/20 to-accent/20 border-primary/50">
+        <Card className="shadow-xl bg-primary/5 border-primary/20">
           <CardHeader>
             <CardTitle className="font-headline text-xl text-foreground flex items-center">
-              <CheckCircle2 className="h-6 w-6 mr-2 text-green-600" />
+              <CheckCircle2 className="h-6 w-6 mr-2 text-green-500" /> {/* Keeping green for success icon */}
               Ovulation Estimation Result
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-foreground/90">
-            <p>
-              <strong>Estimated Time to Ovulation:</strong> {estimationResult.timeToOvulationDays} days
-            </p>
-            <p>
-              <strong>Confidence Level:</strong> 
-              <span className={`font-semibold ml-1 px-2 py-0.5 rounded-full text-xs ${
-                estimationResult.confidenceLevel.toLowerCase() === 'high' ? 'bg-green-200 text-green-800' :
-                estimationResult.confidenceLevel.toLowerCase() === 'medium' ? 'bg-yellow-200 text-yellow-800' :
-                'bg-red-200 text-red-800'
-              }`}>
-                {estimationResult.confidenceLevel}
-              </span>
-            </p>
+          <CardContent className="space-y-4 text-foreground/90">
+            <div className="flex justify-between items-center bg-card p-3 rounded-md border">
+                <p className="font-medium">Estimated Time to Ovulation:</p>
+                <p className="text-lg font-bold text-primary">{estimationResult.timeToOvulationDays} days</p>
+            </div>
+             <div className="flex justify-between items-center bg-card p-3 rounded-md border">
+                <p className="font-medium">Confidence Level:</p>
+                <span className={`font-semibold px-3 py-1 rounded-full text-xs ${
+                    estimationResult.confidenceLevel.toLowerCase() === 'high' ? 'bg-green-100 text-green-700 border border-green-300' : // Keeping specific colors for confidence
+                    estimationResult.confidenceLevel.toLowerCase() === 'medium' ? 'bg-yellow-100 text-yellow-700 border border-yellow-300' :
+                    'bg-red-100 text-red-700 border border-red-300'
+                }`}>
+                    {estimationResult.confidenceLevel}
+                </span>
+            </div>
             <div>
-              <strong className="block mb-1">Personalized Tips:</strong>
-              <p className="text-sm bg-background/50 p-3 rounded-md border border-border">
-                {estimationResult.additionalTips.split('\n').map((tip, index) => <span key={index}>{tip}<br/></span>)}
-              </p>
+              <strong className="block mb-2 text-md font-medium flex items-center"><Lightbulb className="h-5 w-5 mr-2 text-yellow-400" />Personalized Tips:</strong>
+              <div className="text-sm bg-card p-4 rounded-md border">
+                {estimationResult.additionalTips.split('\n').map((tip, index) => <p key={index} className="mb-1 last:mb-0">{tip}</p>)}
+              </div>
             </div>
           </CardContent>
-          <CardFooter>
-             <Button variant="outline" onClick={() => { setEstimationResult(null); reset(); }} className="text-foreground">
+          <CardFooter className="pt-2">
+             <Button variant="outline" onClick={() => { setEstimationResult(null); reset(); }} className="text-foreground hover:bg-muted">
                 Make a new estimation
             </Button>
           </CardFooter>
