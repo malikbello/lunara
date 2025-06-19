@@ -29,7 +29,8 @@ const calculateCycleEvents = (lastPeriodDateStr: string, cycleLength: number, pe
 
   const allEvents = { periodDays: [...periodDays], fertileWindow: [...fertileWindow], ovulationDays: [ovulationDay] };
 
-  for (let cycle = 1; cycle <= 2; cycle++) {
+  // Calculate for a few future and past cycles for broader display
+  for (let cycle = 1; cycle <= 3; cycle++) { // future cycles
     const currentLPD = addDays(lastPeriodDate, cycleLength * cycle);
     for (let i = 0; i < periodLength; i++) {
       allEvents.periodDays.push(addDays(currentLPD, i));
@@ -42,6 +43,20 @@ const calculateCycleEvents = (lastPeriodDateStr: string, cycleLength: number, pe
     }
     allEvents.fertileWindow.push(addDays(currentOvulationDay,1));
   }
+  for (let cycle = 1; cycle <= 2; cycle++) { // past cycles
+    const currentLPD = subDays(lastPeriodDate, cycleLength * cycle);
+    for (let i = 0; i < periodLength; i++) {
+      allEvents.periodDays.push(addDays(currentLPD, i));
+    }
+    const currentEstimatedNextPeriod = addDays(currentLPD, cycleLength);
+    const currentOvulationDay = subDays(currentEstimatedNextPeriod, 14);
+    allEvents.ovulationDays.push(currentOvulationDay);
+    for (let i = 5; i >= 0; i--) {
+      allEvents.fertileWindow.push(subDays(currentOvulationDay, i));
+    }
+     allEvents.fertileWindow.push(addDays(currentOvulationDay,1));
+  }
+
 
   return { 
     periodDays: allEvents.periodDays.map(d => startOfDay(d)), 
@@ -71,8 +86,8 @@ export default function MenstrualCalendar() {
 
   const modifiersClassNames = {
     period: 'bg-destructive/20 text-destructive-foreground font-semibold !rounded-full',
-    fertile: 'bg-accent/30 text-accent-foreground !rounded-full', // Using accent for fertile
-    ovulation: 'bg-secondary/40 text-secondary-foreground font-bold ring-2 ring-secondary !rounded-full', // Using secondary for ovulation
+    fertile: 'bg-accent/30 text-accent-foreground !rounded-full',
+    ovulation: 'bg-secondary/40 text-secondary-foreground font-bold ring-2 ring-secondary !rounded-full',
     today: 'bg-primary text-primary-foreground !rounded-full'
   };
   
@@ -83,13 +98,13 @@ export default function MenstrualCalendar() {
   if (selectedDay) {
       if (events.ovulationDays.some(d => differenceInDays(d, selectedDay) === 0)) {
         dayStatus = "Predicted Ovulation Day";
-        dayStatusColor = "text-secondary-foreground font-semibold";
+        dayStatusColor = "text-secondary font-semibold"; // Use theme color
       } else if (events.fertileWindow.some(d => differenceInDays(d, selectedDay) === 0)) {
         dayStatus = "Fertile Window";
-        dayStatusColor = "text-accent-foreground font-semibold";
+        dayStatusColor = "text-accent font-semibold"; // Use theme color
       } else if (events.periodDays.some(d => differenceInDays(d, selectedDay) === 0)) {
         dayStatus = "Period Day";
-        dayStatusColor = "text-destructive-foreground font-semibold";
+        dayStatusColor = "text-destructive font-semibold"; // Use theme color
       }
   }
 
@@ -107,22 +122,22 @@ export default function MenstrualCalendar() {
           className="rounded-md border border-input bg-popover text-popover-foreground shadow p-0 self-center lg:self-start"
           modifiers={modifiers}
           modifiersClassNames={modifiersClassNames}
-          numberOfMonths={typeof window !== 'undefined' && window.innerWidth >= 768 ? 2 : 1}
+          numberOfMonths={1} // Changed to always display 1 month
         />
         <div className="mt-4 lg:mt-0 p-4 border border-input rounded-md bg-card w-full lg:max-w-sm flex-grow">
-            <h3 className="font-semibold text-lg text-foreground mb-2">
+            <h3 className="font-semibold text-lg text-card-foreground mb-2">
                 {date ? format(date, "PPP") : "Select a date"}
             </h3>
             <p className={`text-sm ${dayStatusColor}`}>{dayStatus}</p>
             <div className="mt-6 space-y-3 text-sm">
                 <div className="flex items-center">
-                  <Badge className="bg-destructive/20 text-destructive-foreground mr-3 px-3 py-1">Period</Badge> Predicted period day
+                  <Badge variant="outline" className="border-destructive/50 text-destructive mr-3 px-2 py-0.5">Period</Badge> Predicted period day
                 </div>
                 <div className="flex items-center">
-                  <Badge className="bg-accent/30 text-accent-foreground mr-3 px-3 py-1">Fertile</Badge> Predicted fertile day
+                  <Badge variant="outline" className="border-accent/50 text-accent mr-3 px-2 py-0.5">Fertile</Badge> Predicted fertile day
                 </div>
                 <div className="flex items-center">
-                  <Badge className="bg-secondary/40 text-secondary-foreground mr-3 px-3 py-1">Ovulation</Badge> Predicted ovulation day
+                  <Badge variant="outline" className="border-secondary/50 text-secondary mr-3 px-2 py-0.5">Ovulation</Badge> Predicted ovulation day
                 </div>
             </div>
         </div>
