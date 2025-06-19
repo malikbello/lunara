@@ -98,23 +98,23 @@ export default function MenstrualCalendar() {
   if (selectedDay) {
       if (events.ovulationDays.some(d => differenceInDays(d, selectedDay) === 0)) {
         dayStatus = "Predicted Ovulation Day";
-        dayStatusColor = "text-secondary font-semibold"; // Use theme color
+        dayStatusColor = "text-secondary font-semibold";
       } else if (events.fertileWindow.some(d => differenceInDays(d, selectedDay) === 0)) {
         dayStatus = "Fertile Window";
-        dayStatusColor = "text-accent font-semibold"; // Use theme color
+        dayStatusColor = "text-accent font-semibold";
       } else if (events.periodDays.some(d => differenceInDays(d, selectedDay) === 0)) {
         dayStatus = "Period Day";
-        dayStatusColor = "text-destructive font-semibold"; // Use theme color
+        dayStatusColor = "text-destructive font-semibold";
       }
   }
 
   return (
-    <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 col-span-1 md:col-span-2 lg:col-span-2">
+    <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
       <CardHeader>
         <CardTitle className="font-headline text-xl text-card-foreground">Menstrual Calendar</CardTitle>
         <CardDescription className="text-card-foreground/80">Track your cycle, fertile windows, and ovulation.</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col lg:flex-row gap-6 items-start">
+      <CardContent className="flex flex-col lg:flex-row gap-6 items-start lg:justify-center">
         <Calendar
           mode="single"
           selected={date}
@@ -122,7 +122,7 @@ export default function MenstrualCalendar() {
           className="rounded-md border border-input bg-popover text-popover-foreground shadow p-0 self-center lg:self-start"
           modifiers={modifiers}
           modifiersClassNames={modifiersClassNames}
-          numberOfMonths={1} // Changed to always display 1 month
+          numberOfMonths={1}
         />
         <div className="mt-4 lg:mt-0 p-4 border border-input rounded-md bg-card w-full lg:max-w-sm flex-grow">
             <h3 className="font-semibold text-lg text-card-foreground mb-2">

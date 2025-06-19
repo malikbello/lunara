@@ -18,11 +18,11 @@ export default function DashboardPage() {
            <DailyOverview />
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           <MenstrualCalendar />
         </div>
 
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-3">
           <PersonalizedInsightCard />
         </div>
       </div>
